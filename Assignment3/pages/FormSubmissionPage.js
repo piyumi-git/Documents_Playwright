@@ -3,29 +3,25 @@ import { BasePage } from './BasePage.js';
 export class FormSubmissionPage extends BasePage {
   constructor(page) {
     super(page);
-    this.formMenu = 'text=Form Submission';
-    this.name = '#name';
-    this.email = '#email';
-    this.phone = '#phone';
-    this.submitBtn = 'button:has-text("Submit")';
-    this.successMsg = '.alert-success';
+
+    this.nameInput = page.getByRole('textbox', { name: 'Name*' });
+    this.emailInput = page.getByRole('textbox', { name: 'Email*' });
+    this.contactNumberInput = page.getByRole('textbox', { name: 'Contact number*' });
+    this.dateInput = page.getByRole('textbox', { name: 'Date*' });
+
+    this.greenRadio = page.getByRole('radio', { name: 'Green*' });
+    this.pastaCheckbox = page.getByRole('checkbox', { name: 'pasta*' });
+
+    this.uploadButton = page.getByRole('button', { name: 'uploadfile' });
+
+    this.selectCountry = page.getByLabel('select Country*');
+
+    this.submitButton = page.getByRole('button', { name: 'Submit' });
+    this.successToast = page.locator('#success-msg');
   }
 
-  async openForm() {
-    await this.click(this.formMenu);
-  }
-
-  async fillForm() {
-    await this.fill(this.name, 'QA Tester');
-    await this.fill(this.email, 'qa@test.com');
-    await this.fill(this.phone, '1234567890');
-  }
-
-  async submitForm() {
-    await this.click(this.submitBtn);
-  }
-
-  async validateFormSubmission() {
-    await this.page.waitForSelector(this.successMsg);
+  async validateSubmissionSuccess() {
+    await this.successToast.waitFor({ state: 'visible' });
+    await expect(this.successToast).toBeVisible();
   }
 }

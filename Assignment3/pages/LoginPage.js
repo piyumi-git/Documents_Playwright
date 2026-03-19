@@ -5,34 +5,24 @@ import { expect } from '@playwright/test';
 export class LoginPage extends BasePage {
   constructor(page) {
     super(page);
+    
 
-    this.userAuthLink = 'text=User Authentication';
-    this.emailInput = '#email';
-    this.passwordInput = '#password';
-    this.loginButton = 'button:has-text("Login")';
-    this.successToast = '.toast-success';
-  }
-
-  async openUserAuthentication() {
-    await this.click(this.userAuthLink);
+    this.emailInput = page.getByRole('textbox',{ name:'Email*' });
+    this.passwordInput = page.getByRole('textbox',{ name:'Password*' });
+    this.loginButton = page.getByRole('button',{ name:'Login' });
+    this.successToast = page.locator('#success-msg');
   }
 
   async login(email, password) {
-    await this.fill(this.emailInput, email);
-    await this.fill(this.passwordInput, password);
-    await this.click(this.loginButton);
+    await this.emailInput.fill(email);
+    await this.passwordInput.fill(password);
+    await this.loginButton.click();
+  
   }
-
 
   async validateLoginSuccess() {
-   await expect(page.getByText('Login Successful')).toBeVisible();
-    // await this.page.waitForSelector(this.successToast, { state: 'visible' });
+   await this.successToast.waitFor({ state: 'visible' });
+   await expect(this.successToast).toBeVisible();
   }
-
-// async validateLoginSuccess() {
-//   const toast = this.page.locator(this.successToast);
-//   await expect(toast).toContainText(/success/i);
-// }
-
 
 }

@@ -1,20 +1,23 @@
-import { BasePage } from './BasePage.js';
+import {BasePage} from './BasePage.js';
 
 export class CartPage extends BasePage {
   constructor(page) {
     super(page);
-    this.cartItems = '.cart_item';
-    this.checkoutBtn = '#checkout';
+
+   // Specific cart item selected (jacket)
+    this.item3 = page.locator('a[href="ecommerce/product-details?id=3"]');
+
+    // Cart page header to confirm navigation
+    this.cartHeader = page.locator('#ecommerce-header');
   }
 
-  async validateItemsInCart(count) {
-    const items = await this.page.$$(this.cartItems);
-    if (items.length !== count) {
-      throw new Error(`Expected ${count} items, found ${items.length}`);
-    }
+  async validateCartPageLoaded() {
+    await this.cartHeader.waitFor({ state: 'visible' });
+    await expect(this.cartHeader).toBeVisible();
   }
 
-  async checkout() {
-    await this.click(this.checkoutBtn);
+  async selectItem3() {
+    await this.item3.waitFor({ state: 'visible' });
+    await this.click(this.item3);
   }
 }
