@@ -17,7 +17,7 @@ export class BasePage {
     const element = this._resolve(locator);
     await element.waitFor({ state: 'visible' });
     await element.fill(value);
-    await locator.fill(value);
+    
   }
 
   async type(locator, value) {
